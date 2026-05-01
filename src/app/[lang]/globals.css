@@ -1,0 +1,139 @@
+@tailwind base;
+@tailwind components;
+@tailwind utilities;
+
+/* ============================================================
+   Advanced Multiple Inc. — Global Design System
+   Clean white academic/journal theme with Canadian accents
+   ============================================================ */
+
+@import url('https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap');
+
+/* ---- Base Reset ---- */
+body {
+  @apply bg-white text-ami-slate font-sans antialiased;
+  font-feature-settings: 'cv02', 'cv03', 'cv04', 'cv11';
+}
+
+/* ---- Rich Text Styles (for CMS Markdown content) ---- */
+.rich-text h1 {
+  @apply text-3xl font-bold mb-5 text-ami-navy;
+}
+.rich-text h2 {
+  @apply text-2xl font-bold mb-4 text-ami-navy;
+}
+.rich-text h3 {
+  @apply text-xl font-semibold mb-3 text-ami-navy;
+}
+.rich-text h4 {
+  @apply text-lg font-semibold mb-3 text-ami-navy-light;
+}
+.rich-text h5 {
+  @apply text-base font-semibold mb-2 text-ami-navy-light;
+}
+.rich-text h6 {
+  @apply text-sm font-semibold mb-2 text-ami-slate;
+}
+.rich-text hr {
+  @apply border-ami-gray-200 my-8;
+}
+.rich-text a {
+  @apply text-ami-teal underline underline-offset-2 hover:text-ami-teal-dark transition-colors;
+}
+.rich-text p {
+  @apply mb-4 leading-relaxed;
+}
+.rich-text strong {
+  @apply font-semibold text-ami-navy;
+}
+.rich-text em {
+  @apply italic;
+}
+.rich-text del {
+  @apply line-through opacity-60;
+}
+.rich-text blockquote {
+  @apply border-l-4 border-ami-teal pl-5 py-2 mb-4 text-ami-slate italic bg-ami-gray-warm rounded-r;
+}
+.rich-text ul {
+  @apply list-disc pl-5 mb-4 space-y-1;
+}
+.rich-text ol {
+  @apply list-decimal pl-5 mb-4 space-y-1;
+}
+.rich-text li {
+  @apply leading-relaxed;
+}
+.rich-text li > ul {
+  @apply list-disc pl-5 mt-1;
+}
+.rich-text li > ol {
+  @apply list-decimal pl-5 mt-1;
+}
+.rich-text pre {
+  @apply font-mono bg-ami-navy text-white rounded-card p-4 my-6 text-sm overflow-x-auto;
+}
+.rich-text code {
+  @apply font-mono bg-ami-gray-100 text-ami-red rounded px-1.5 py-0.5 text-sm;
+}
+.rich-text pre code {
+  @apply bg-transparent text-white p-0;
+}
+.rich-text table {
+  @apply w-full border-collapse my-6;
+}
+.rich-text th {
+  @apply bg-ami-gray-100 text-left py-2.5 px-4 font-semibold text-ami-navy text-sm border-b-2 border-ami-gray-200;
+}
+.rich-text td {
+  @apply py-2.5 px-4 border-b border-ami-gray-200 text-sm;
+}
+.rich-text img {
+  @apply w-full object-cover rounded-card my-6;
+}
+
+/* ---- Utility Classes ---- */
+.section-padding {
+  @apply py-16 md:py-20 lg:py-24;
+}
+.section-padding-sm {
+  @apply py-10 md:py-14 lg:py-16;
+}
+.container-ami {
+  @apply max-w-content mx-auto px-5 sm:px-6 lg:px-8;
+}
+
+/* ---- Transitions ---- */
+.transition-default {
+  @apply transition-all duration-200 ease-in-out;
+}
+
+/* ---- Card Base ---- */
+.card-base {
+  @apply bg-white rounded-card border border-ami-gray-200 shadow-card hover:shadow-card-hover transition-default;
+}
+
+/* ---- Button Styles ---- */
+.btn-primary {
+  @apply inline-flex items-center justify-center px-6 py-2.5 bg-ami-red text-white font-medium text-sm rounded-md hover:bg-ami-red-dark transition-default;
+}
+.btn-secondary {
+  @apply inline-flex items-center justify-center px-6 py-2.5 bg-white text-ami-navy font-medium text-sm rounded-md border border-ami-gray-300 hover:border-ami-navy hover:bg-ami-gray-warm transition-default;
+}
+.btn-teal {
+  @apply inline-flex items-center justify-center px-6 py-2.5 bg-ami-teal text-white font-medium text-sm rounded-md hover:bg-ami-teal-dark transition-default;
+}
+
+/* ---- Scrollbar ---- */
+::-webkit-scrollbar {
+  width: 6px;
+}
+::-webkit-scrollbar-track {
+  @apply bg-ami-gray-100;
+}
+::-webkit-scrollbar-thumb {
+  @apply bg-ami-gray-300 rounded-full;
+}
+::-webkit-scrollbar-thumb:hover {
+  @apply bg-ami-gray-400;
+}
