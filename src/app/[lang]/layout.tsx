@@ -4,7 +4,6 @@ import { getStrapiMedia, getStrapiURL } from "./utils/api-helpers";
 import { fetchAPI } from "./utils/fetch-api";
 
 import { i18n } from "../../../i18n-config";
-import Banner from "./components/Banner";
 import Footer from "./components/Footer";
 import Navbar from "./components/Navbar";
 import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
@@ -39,16 +38,23 @@ async function getGlobal(lang: string): Promise<any> {
 export async function generateMetadata({ params } : { params: {lang: string}}): Promise<Metadata> {
   const meta = await getGlobal(params.lang);
 
-  if (!meta.data) return FALLBACK_SEO;
+  // Always use the local AMI logo as favicon for consistent branding
+  const localIcon = '/images/ami-logo.png';
 
-  const { metadata, favicon } = meta.data.attributes;
-  const { url } = favicon.data.attributes;
+  if (!meta.data) {
+    return {
+      ...FALLBACK_SEO,
+      icons: { icon: localIcon },
+    };
+  }
+
+  const { metadata } = meta.data.attributes;
 
   return {
     title: metadata.metaTitle,
     description: metadata.metaDescription,
     icons: {
-      icon: [new URL(url, getStrapiURL())],
+      icon: localIcon,
     },
   };
 }
@@ -66,6 +72,7 @@ export default async function RootLayout({
     return (
       <html lang={params.lang}>
         <head>
+          <link rel="icon" href="/images/ami-logo.png" type="image/png" />
           <link rel="preconnect" href="https://fonts.googleapis.com" />
           <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
           <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -97,6 +104,7 @@ export default async function RootLayout({
   return (
     <html lang={params.lang}>
       <head>
+        <link rel="icon" href="/images/ami-logo.png" type="image/png" />
         <link rel="preconnect" href="https://fonts.googleapis.com" />
         <link rel="preconnect" href="https://fonts.gstatic.com" crossOrigin="anonymous" />
         <link href="https://fonts.googleapis.com/css2?family=Inter:wght@300;400;500;600;700;800&display=swap" rel="stylesheet" />
@@ -111,8 +119,6 @@ export default async function RootLayout({
         <main className="min-h-screen">
           {children}
         </main>
-
-        <Banner data={notificationBanner} />
 
         <Footer
           logoUrl={footerLogoUrl}
