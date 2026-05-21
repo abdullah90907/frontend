@@ -34,9 +34,16 @@ const FOOTER_COMPANY_LINKS = [
   { label: "Contact", href: "/contact" },
 ];
 
+const DEFAULT_CONTACT_LINKS: Array<FooterLink> = [
+  { id: 1, url: "mailto:office@advancedmultiple.ca", newTab: false, text: "office@advancedmultiple.ca" },
+  { id: 2, url: "https://advancedmultiple.ca", newTab: true, text: "advancedmultiple.ca" },
+  { id: 3, url: "https://advancedmultiple.com", newTab: true, text: "advancedmultiple.com" },
+];
+
 export default function Footer({
   logoUrl,
   logoText,
+  contactLinks,
   menuLinks,
   categoryLinks,
   legalLinks,
@@ -44,11 +51,15 @@ export default function Footer({
 }: {
   logoUrl: string | null;
   logoText: string | null;
+  contactLinks: Array<FooterLink>;
   menuLinks: Array<FooterLink>;
   categoryLinks: Array<CategoryLink>;
   legalLinks: Array<FooterLink>;
   socialLinks: Array<FooterLink>;
 }) {
+  const renderedContactLinks = contactLinks && contactLinks.length > 0 ? contactLinks : DEFAULT_CONTACT_LINKS;
+  const displayLogo = logoUrl ? logoUrl : "/images/ami-logo.png";
+
   return (
     <footer className="bg-ami-navy text-white">
       {/* Main footer */}
@@ -57,7 +68,7 @@ export default function Footer({
           {/* Brand Column */}
           <div className="lg:col-span-1">
             <div className="flex items-center gap-3 mb-4">
-              <img src="/images/ami-logo.png" alt="AMI" className="h-12 w-auto brightness-0 invert" />
+              <img src={displayLogo} alt={logoText || "AMI"} className="h-12 w-auto brightness-0 invert" />
               <div>
                 <span className="text-base font-bold block leading-tight">
                   Advanced Multiple
@@ -71,26 +82,31 @@ export default function Footer({
               A modern digital media and content production company delivering high-impact visual and communication solutions.
             </p>
             <div className="space-y-1.5">
-              <a
-                href="mailto:office@advancedmultiple.ca"
-                className="flex items-center gap-2 text-sm text-gray-400 hover:text-ami-teal-light transition-default"
-              >
-                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
-                </svg>
-                office@advancedmultiple.ca
-              </a>
-              <a
-                href="https://advancedmultiple.ca"
-                target="_blank"
-                rel="noopener"
-                className="flex items-center gap-2 text-sm text-gray-400 hover:text-ami-teal-light transition-default"
-              >
-                <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
-                  <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
-                </svg>
-                advancedmultiple.ca
-              </a>
+              {renderedContactLinks.map((link) => {
+                const isMail = link.url.startsWith("mailto:");
+                const isWeb = link.url.startsWith("http://") || link.url.startsWith("https://");
+
+                return (
+                  <a
+                    key={link.id}
+                    href={link.url}
+                    target={link.newTab ? "_blank" : undefined}
+                    rel={link.newTab ? "noopener noreferrer" : undefined}
+                    className="flex items-center gap-2 text-sm text-gray-400 hover:text-ami-teal-light transition-default"
+                  >
+                    <svg className="w-4 h-4 flex-shrink-0" fill="none" stroke="currentColor" viewBox="0 0 24 24">
+                      {isMail ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M3 8l7.89 5.26a2 2 0 002.22 0L21 8M5 19h14a2 2 0 002-2V7a2 2 0 00-2-2H5a2 2 0 00-2 2v10a2 2 0 002 2z" />
+                      ) : isWeb ? (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M21 12a9 9 0 01-9 9m9-9a9 9 0 00-9-9m9 9H3m9 9a9 9 0 01-9-9m9 9c1.657 0 3-4.03 3-9s-1.343-9-3-9m0 18c-1.657 0-3-4.03-3-9s1.343-9 3-9m-9 9a9 9 0 019-9" />
+                      ) : (
+                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={1.5} d="M13.828 10.172a4 4 0 10-5.656 5.656m1.414-1.414a2 2 0 112.828-2.828m4.95-4.95a8 8 0 10-11.314 11.314l1.414-1.414a6 6 0 118.486-8.486l-1.414 1.414" />
+                      )}
+                    </svg>
+                    {link.text}
+                  </a>
+                );
+              })}
             </div>
           </div>
 

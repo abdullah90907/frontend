@@ -6,6 +6,8 @@ import ServiceGrid from '../components/ServiceGrid';
 import TeamGrid from '../components/TeamGrid';
 import ContactGrid from '../components/ContactGrid';
 import CategoryOverview from '../components/CategoryOverview';
+import ServicesOverview from '../components/ServicesOverview';
+import EventGrid from '../components/EventGrid';
 
 // Map of server‐side async components that bypass lazy()
 const SERVER_COMPONENTS: Record<string, any> = {
@@ -13,6 +15,8 @@ const SERVER_COMPONENTS: Record<string, any> = {
   TeamGrid,
   ContactGrid,
   CategoryOverview,
+  ServicesOverview,
+  EventGrid,
 };
 
 export default function componentResolver(section: any, index: number): ReactElement {

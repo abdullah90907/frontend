@@ -12,42 +12,7 @@ export async function getPageBySlug(slug: string, lang: string) {
         locale: lang,
         populate: {
             contentSections: {
-                populate: {
-                    picture: {
-                        populate: '*',
-                    },
-                    buttons: {
-                        populate: '*',
-                    },
-                    feature: {
-                        populate: '*',
-                    },
-                    testimonials: {
-                        populate: {
-                            picture: {
-                                populate: '*',
-                            },
-                        },
-                    },
-                    plans: {
-                        populate: {
-                            product_features: {
-                                populate: '*',
-                            },
-                        },
-                    },
-                    submitButton: {
-                        populate: '*',
-                    },
-                    // WhatWeDo items – repeatable component
-                    items: {
-                        populate: '*',
-                    },
-                    // Image field
-                    image: {
-                        populate: '*',
-                    },
-                },
+                populate: '*',
             },
             seo: {
                 populate: '*',

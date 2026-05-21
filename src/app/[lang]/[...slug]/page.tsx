@@ -2,6 +2,7 @@ import {Metadata} from "next";
 import {getPageBySlug} from "@/app/[lang]/utils/get-page-by-slug";
 import {FALLBACK_SEO} from "@/app/[lang]/utils/constants";
 import componentResolver from "../utils/component-resolver";
+import ServiceGrid from "../components/ServiceGrid";
 
 
 type Props = {
@@ -51,6 +52,16 @@ export default async function PageRoute({params}: Props) {
 
     const contentSections = page.data[0].attributes.contentSections;
     if (!contentSections || contentSections.length === 0) {
+        if (slugStr === "services") {
+            return (
+                <ServiceGrid
+                    data={{
+                        heading: "Our Services",
+                        description: "Explore our complete range of services",
+                    }}
+                />
+            );
+        }
         return (
             <div className="container-ami py-20 text-center">
                 <h1 className="text-2xl font-bold text-ami-navy mb-3">
@@ -61,6 +72,13 @@ export default async function PageRoute({params}: Props) {
                 </p>
             </div>
         );
+    }
+
+    if (slugStr === "services") {
+        const filteredSections = contentSections.filter((section: any) => {
+            return section.__component !== "sections.service-grid" && section.__component !== "sections.category-overview";
+        });
+        return filteredSections.map((section: any, index: number) => componentResolver(section, index));
     }
 
     return contentSections.map((section: any, index: number) => componentResolver(section, index));

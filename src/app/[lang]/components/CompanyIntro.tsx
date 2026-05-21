@@ -1,10 +1,21 @@
 import Link from "next/link";
+import { getStrapiMedia } from "../utils/api-helpers";
 
 interface CompanyIntroProps {
   data: {
     heading?: string;
     description?: string;
     content?: string;
+    image?: {
+      data?: {
+        attributes?: {
+          url?: string;
+          alternativeText?: string;
+        };
+      };
+    };
+    imageFit?: "cover" | "contain";
+    imagePosition?: "center" | "top" | "bottom" | "left" | "right";
   };
 }
 
@@ -45,19 +56,36 @@ const PILLARS = [
 ];
 
 export default function CompanyIntro({ data }: CompanyIntroProps) {
+  const fitClass = data?.imageFit === "contain" ? "object-contain" : "object-cover";
+  const positionClass =
+    data?.imagePosition === "top"
+      ? "object-top"
+      : data?.imagePosition === "bottom"
+      ? "object-bottom"
+      : data?.imagePosition === "left"
+      ? "object-left"
+      : data?.imagePosition === "right"
+      ? "object-right"
+      : "object-center";
+
+  const imageUrl = data?.image?.data?.attributes?.url
+    ? getStrapiMedia(data.image.data.attributes.url)
+    : "/images/about-hero.jpg";
+  const imageAlt = data?.image?.data?.attributes?.alternativeText || "About Advanced Multiple";
+
   return (
     <section className="section-padding bg-white" id="company-intro">
       <div className="container-ami">
         <div className="grid gap-12 lg:grid-cols-2 items-center">
 
           {/* ── Left: Image stack ── */}
-          <div className="relative">
+          <div className="relative animate-fade-up">
             {/* Main image */}
             <div className="relative rounded-card overflow-hidden aspect-[4/3] bg-ami-gray-100 shadow-card-hover">
               <img
-                src="/images/about-hero.jpg"
-                alt="About Advanced Multiple"
-                className="w-full h-full object-cover"
+                src={imageUrl}
+                alt={imageAlt}
+                className={`w-full h-full ${fitClass} ${positionClass}`}
               />
               {/* Gradient overlay at bottom */}
               <div className="absolute inset-0 bg-gradient-to-t from-ami-navy/60 via-transparent to-transparent" />
@@ -79,7 +107,7 @@ export default function CompanyIntro({ data }: CompanyIntroProps) {
           </div>
 
           {/* ── Right: Content ── */}
-          <div className="lg:pl-4 mt-8 lg:mt-0">
+          <div className="lg:pl-4 mt-8 lg:mt-0 animate-fade-up-delay-150">
             {/* Label */}
             <div className="inline-flex items-center gap-2 mb-5">
               <div className="w-6 h-0.5 bg-ami-red rounded-full" />
@@ -92,7 +120,7 @@ export default function CompanyIntro({ data }: CompanyIntroProps) {
               {data?.heading || "Welcome to Advanced Multiple"}
             </h2>
 
-            <div className="space-y-4 text-ami-slate leading-relaxed text-sm md:text-base mb-7">
+            <div className="space-y-4 text-ami-slate leading-relaxed text-sm md:text-base mb-6">
               <p>
                 {data?.description ||
                   "Advanced Multiple is a modern digital media and content production company delivering high-impact visual and communication solutions. We specialize in creating professional videos, social media content, and digital products that help individuals, organizations, and brands communicate effectively."}
@@ -104,7 +132,7 @@ export default function CompanyIntro({ data }: CompanyIntroProps) {
             </div>
 
             {/* Pillars */}
-            <div className="grid grid-cols-3 gap-3 mb-7">
+            <div className="grid grid-cols-3 gap-3 mb-7 mt-6">
               {PILLARS.map((p) => (
                 <div
                   key={p.label}

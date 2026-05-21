@@ -23,7 +23,9 @@ async function getGlobal(lang: string): Promise<any> {
       "favicon",
       "notificationBanner.link",
       "navbar.links",
+      "navbar.sections.links",
       "navbar.navbarLogo.logoImg",
+      "contactLinks",
       "footer.footerLogo.logoImg",
       "footer.menuLinks",
       "footer.legalLinks",
@@ -92,6 +94,8 @@ export default async function RootLayout({
   }
   
   const { notificationBanner, navbar, footer } = global.data.attributes;
+  const contactLinks = global.data.attributes.contactLinks ?? [];
+  const navbarSections = navbar.sections ?? [];
 
   const navbarLogoUrl = getStrapiMedia(
     navbar.navbarLogo.logoImg.data?.attributes.url
@@ -112,6 +116,8 @@ export default async function RootLayout({
       <body className="font-sans bg-white text-ami-slate">
         <Navbar
           links={navbar.links}
+          sections={navbarSections}
+          contactLinks={contactLinks}
           logoUrl={navbarLogoUrl}
           logoText={navbar.navbarLogo.logoText}
         />
@@ -123,6 +129,7 @@ export default async function RootLayout({
         <Footer
           logoUrl={footerLogoUrl}
           logoText={footer.footerLogo.logoText}
+          contactLinks={contactLinks}
           menuLinks={footer.menuLinks}
           categoryLinks={footer.categories.data}
           legalLinks={footer.legalLinks}

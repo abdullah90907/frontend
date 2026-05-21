@@ -117,3 +117,42 @@ export async function getContactDepartments() {
     return [];
   }
 }
+
+/**
+ * Fetch all services with coverImage and category.
+ */
+export async function getAllServices() {
+  try {
+    const data = await fetchAPI(
+      "/services",
+      {
+        populate: ["coverImage", "serviceCategory", "icon"],
+        pagination: { pageSize: 1000 },
+        sort: ["displayOrder:asc"],
+      },
+      authHeader
+    );
+    return data?.data ?? [];
+  } catch {
+    return [];
+  }
+}
+
+/**
+ * Fetch all events.
+ */
+export async function getAllEvents() {
+  try {
+    const data = await fetchAPI(
+      "/events",
+      {
+        populate: ["coverImage", "seo.shareImage"],
+        sort: ["eventDate:asc"],
+      },
+      authHeader
+    );
+    return data?.data ?? [];
+  } catch {
+    return [];
+  }
+}

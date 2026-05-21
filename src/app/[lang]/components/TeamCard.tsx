@@ -45,7 +45,7 @@ export default function TeamCard({
       {email && (
         <a
           href={`mailto:${email}`}
-          className="inline-block mt-3 text-xs text-ami-teal hover:text-ami-teal-dark transition-default"
+          className="inline-block mt-3 text-xs text-ami-teal hover:text-ami-teal-dark transition-default break-all max-w-full"
         >
           {email}
         </a>

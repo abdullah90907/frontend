@@ -28,11 +28,24 @@ interface HeroProps {
     description: string;
     picture: Picture;
     buttons: Button[];
+    imageFit?: "contain" | "cover";
+    imagePosition?: "center" | "top" | "bottom" | "left" | "right";
   };
 }
 
 export default function Hero({ data }: HeroProps) {
   const imgUrl = getStrapiMedia(data.picture?.data?.attributes?.url ?? null);
+  const fitClass = data.imageFit === "cover" ? "object-cover" : "object-contain";
+  const positionClass =
+    data.imagePosition === "top"
+      ? "object-top"
+      : data.imagePosition === "bottom"
+      ? "object-bottom"
+      : data.imagePosition === "left"
+      ? "object-left"
+      : data.imagePosition === "right"
+      ? "object-right"
+      : "object-center";
 
   return (
     <section className="relative bg-ami-navy overflow-hidden">
@@ -88,7 +101,7 @@ export default function Hero({ data }: HeroProps) {
             <Image
               src={imgUrl}
               alt={data.picture?.data?.attributes?.alternativeText || "Advanced Multiple Inc."}
-              className="object-contain max-h-72 sm:max-h-80 lg:max-h-96 w-auto drop-shadow-2xl"
+              className={`${fitClass} ${positionClass} max-h-72 sm:max-h-80 lg:max-h-96 w-auto drop-shadow-2xl`}
               width={500}
               height={400}
               priority

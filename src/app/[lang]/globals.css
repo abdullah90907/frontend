@@ -108,6 +108,40 @@ body {
   @apply transition-all duration-200 ease-in-out;
 }
 
+/* ---- Animations ---- */
+@keyframes fade-up {
+  from {
+    opacity: 0;
+    transform: translateY(16px);
+  }
+  to {
+    opacity: 1;
+    transform: translateY(0);
+  }
+}
+
+@keyframes fade-in {
+  from {
+    opacity: 0;
+  }
+  to {
+    opacity: 1;
+  }
+}
+
+.animate-fade-up {
+  animation: fade-up 700ms ease both;
+}
+
+.animate-fade-up-delay-150 {
+  animation: fade-up 700ms ease both;
+  animation-delay: 150ms;
+}
+
+.animate-fade-in {
+  animation: fade-in 600ms ease both;
+}
+
 /* ---- Card Base ---- */
 .card-base {
   @apply bg-white rounded-card border border-ami-gray-200 shadow-card hover:shadow-card-hover transition-default;

@@ -1,5 +1,7 @@
-import Link from "next/link";
+import ServicesOverviewGrid from "./ServicesOverviewGrid";
 import SectionHeading from "./SectionHeading";
+import { getAllServices } from "../utils/strapi";
+import { getStrapiMedia } from "../utils/api-helpers";
 
 interface ServicesOverviewProps {
   data: {
@@ -8,7 +10,8 @@ interface ServicesOverviewProps {
   };
 }
 
-const SERVICES = [
+// Fallback when CMS has no services yet — ensures the section never looks empty
+const FALLBACK_SERVICES = [
   {
     title: "Video Production",
     description: "Professional video production for brands, organizations, and digital campaigns — from concept to final cut.",
@@ -65,7 +68,51 @@ const SERVICES = [
   },
 ];
 
-export default function ServicesOverview({ data }: ServicesOverviewProps) {
+// Maps category names to tag labels/colors
+function getCategoryTag(catName?: string): { tag: string; tagColor: string } {
+  if (!catName) return { tag: "Service", tagColor: "bg-ami-teal text-white" };
+  const lower = catName.toLowerCase();
+  if (lower.includes("media") || lower.includes("video"))
+    return { tag: "Media", tagColor: "bg-ami-navy text-white" };
+  if (lower.includes("content") || lower.includes("creative"))
+    return { tag: "Creative", tagColor: "bg-ami-teal text-white" };
+  if (lower.includes("social") || lower.includes("digital marketing"))
+    return { tag: "Digital", tagColor: "bg-ami-teal text-white" };
+  if (lower.includes("brand") || lower.includes("strategy"))
+    return { tag: "Strategy", tagColor: "bg-ami-red text-white" };
+  if (lower.includes("market") || lower.includes("growth"))
+    return { tag: "Growth", tagColor: "bg-ami-red text-white" };
+  if (lower.includes("academ") || lower.includes("research") || lower.includes("publication"))
+    return { tag: "Academic", tagColor: "bg-ami-navy text-white" };
+  return { tag: "Service", tagColor: "bg-ami-teal text-white" };
+}
+
+export default async function ServicesOverview({ data }: ServicesOverviewProps) {
+  // Fetch services from CMS
+  const cmsServices = await getAllServices();
+
+  // Map CMS data to display format, or fall back to hardcoded list
+  const services =
+    cmsServices.length > 0
+      ? cmsServices.map((svc: any) => {
+          const attrs = svc.attributes || svc;
+          const coverUrl = getStrapiMedia(attrs.coverImage?.data?.attributes?.url ?? null);
+          const catName = attrs.serviceCategory?.data?.attributes?.name;
+          const catSlug = attrs.serviceCategory?.data?.attributes?.slug;
+          const { tag, tagColor } = getCategoryTag(catName || attrs.title);
+
+          return {
+            title: attrs.title,
+            description: attrs.summary || "",
+            icon: "📋",
+            href: catSlug ? `/${catSlug}/${attrs.slug}` : `/services/${attrs.slug}`,
+            image: coverUrl || null,
+            tag,
+            tagColor,
+          };
+        })
+      : FALLBACK_SERVICES;
+
   return (
     <section className="section-padding bg-ami-gray-warm" id="services-overview">
       <div className="container-ami">
@@ -75,80 +122,12 @@ export default function ServicesOverview({ data }: ServicesOverviewProps) {
           accentColor="teal"
         />
 
-        <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
-          {SERVICES.map((svc) => (
-            <Link key={svc.href} href={svc.href} className="group block">
-              <div className="card-base overflow-hidden h-full flex flex-col">
-
-                {/* ── Image slot — fixed 16/9 aspect ratio ── */}
-                <div className="relative aspect-[16/9] bg-ami-gray-100 overflow-hidden">
-                  {svc.image ? (
-                    <img
-                      src={svc.image}
-                      alt={svc.title}
-                      className="w-full h-full object-cover group-hover:scale-105 transition-transform duration-500"
-                    />
-                  ) : (
-                    <div className="w-full h-full flex items-center justify-center bg-gradient-to-br from-ami-gray-100 to-ami-gray-200">
-                      <span className="text-5xl">{svc.icon}</span>
-                    </div>
-                  )}
-
-                  {/* Dark overlay on hover */}
-                  <div className="absolute inset-0 bg-ami-navy/0 group-hover:bg-ami-navy/30 transition-default" />
-
-                  {/* Category tag badge */}
-                  <span
-                    className={`absolute top-3 left-3 text-2xs font-semibold uppercase tracking-wider px-2.5 py-1 rounded-full ${svc.tagColor}`}
-                  >
-                    {svc.tag}
-                  </span>
-                </div>
-
-                {/* ── Card body ── */}
-                <div className="p-5 flex flex-col flex-1">
-                  {/* Title */}
-                  <h3 className="font-semibold text-ami-navy text-base mb-2 group-hover:text-ami-teal transition-default leading-snug">
-                    {svc.title}
-                  </h3>
-
-                  {/* Divider */}
-                  <div className="w-8 h-0.5 bg-ami-gray-200 group-hover:bg-ami-teal transition-default mb-3 rounded-full" />
-
-                  {/* Description */}
-                  <p className="text-ami-gray-400 text-sm leading-relaxed flex-1">
-                    {svc.description}
-                  </p>
-
-                  {/* CTA row */}
-                  <div className="mt-4 flex items-center justify-between">
-                    <span className="flex items-center gap-1 text-ami-teal text-xs font-semibold group-hover:gap-2 transition-all">
-                      Learn more
-                      <svg
-                        className="w-3.5 h-3.5 transform group-hover:translate-x-0.5 transition-transform"
-                        fill="none"
-                        stroke="currentColor"
-                        viewBox="0 0 24 24"
-                      >
-                        <path strokeLinecap="round" strokeLinejoin="round" strokeWidth={2} d="M9 5l7 7-7 7" />
-                      </svg>
-                    </span>
-                    <div className="w-7 h-7 rounded-full bg-ami-gray-100 flex items-center justify-center group-hover:bg-ami-teal/10 transition-default">
-                      <span className="text-base leading-none">{svc.icon}</span>
-                    </div>
-                  </div>
-                </div>
-              </div>
-            </Link>
-          ))}
-        </div>
-
-        {/* ── CTA ── */}
-        <div className="text-center mt-12">
-          <Link href="/services" className="btn-primary">
-            View All Services
-          </Link>
-        </div>
+        <ServicesOverviewGrid
+          services={services}
+          mode="link"
+          ctaHref="/services"
+          ctaLabel="View All Services"
+        />
       </div>
     </section>
   );
