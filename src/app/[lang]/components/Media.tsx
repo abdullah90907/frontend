@@ -9,34 +9,54 @@ interface MediaProps {
         url: string;
         name: string;
         alternativeText: string;
+        width?: number;
+        height?: number;
       };
     };
   };
-  fit?: "cover" | "contain";
-  position?: "center" | "top" | "bottom" | "left" | "right";
+  size?: "small" | "medium" | "large" | "full";
+  imageFit?: "cover" | "contain";
+  imagePosition?: "center" | "top" | "bottom" | "left" | "right";
 }
 
 export default function Media({ data }: { data: MediaProps }) {
   const imgUrl = getStrapiMedia(data.file.data.attributes.url);
-  const fitClass = data.fit === "contain" ? "object-contain" : "object-cover";
+  const fit = data.imageFit || "contain";
+  const position = data.imagePosition || "center";
+  const size = data.size || "medium";
+  
+  const fitClass = fit === "contain" ? "object-contain" : "object-cover";
   const positionClass =
-    data.position === "top"
+    position === "top"
       ? "object-top"
-      : data.position === "bottom"
+      : position === "bottom"
       ? "object-bottom"
-      : data.position === "left"
+      : position === "left"
       ? "object-left"
-      : data.position === "right"
+      : position === "right"
       ? "object-right"
       : "object-center";
+  
+  const sizeClasses = {
+    small: "h-40 sm:h-48 lg:h-56 xl:h-64",
+    medium: "h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128",
+    large: "h-96 sm:h-[32rem] lg:h-[40rem] xl:h-[48rem]",
+    full: "h-auto w-full"
+  };
+  
+  const sizeClass = sizeClasses[size];
+  
+  const imgWidth = data.file.data.attributes.width || (size === "full" ? 1200 : 800);
+  const imgHeight = data.file.data.attributes.height || (size === "full" ? 600 : 600);
+  
   return (
-    <div className="flex items-center justify-center mt-8 lg:mt-0 h-72 sm:h-80 lg:h-96 xl:h-112 2xl:h-128">
+    <div className={`flex items-center justify-center mt-8 lg:mt-0 ${sizeClass}`}>
       <Image
         src={imgUrl || ""}
         alt={data.file.data.attributes.alternativeText || "none provided"}
-        className={`w-full h-full rounded-lg overflow-hidden ${fitClass} ${positionClass}`}
-        width={400}
-        height={400}
+        className={`w-full ${size === "full" ? "h-auto" : "h-full"} rounded-lg overflow-hidden ${fitClass} ${positionClass}`}
+        width={imgWidth}
+        height={imgHeight}
       />
     </div>
   );
